@@ -12,10 +12,16 @@ app.use(bodyParser.urlencoded({
 
 mongoose.connect("mongodb+srv://tiepbs:Tiep123456@cluster0.5wdpo.mongodb.net/todolistDB");
 
+
+// Create Schema for items
 const itemsSchema = {
   name: String,
 };
+
+// Create Item model
 const Item = mongoose.model("Item", itemsSchema);
+
+// Create initial items using Item model created above
 const item1 = new Item({
   name: "Fifteen minutes of silent thinking.",
 });
@@ -25,18 +31,26 @@ const item2 = new Item({
 const item3 = new Item({
   name: "Fifteen minutes of checing emails",
 });
+
+// Create a defaultItems array
 const defaultItems = [item1, item2, item3];
+
+
+// Create Schema for lists
 const listSchema = {
   name: String,
   items: [itemsSchema]
 };
 
+// Create model for lists using listSchema created above
 const List = mongoose.model("List", listSchema);
+
+
 // Declare to use ejs
 app.set('view engine', 'ejs');
 
 
-
+// Create root route for GET requests to "/"
 app.get("/", function(req, res) {
 
   Item.find({}, function(err, foundItems) {
@@ -60,7 +74,7 @@ app.get("/", function(req, res) {
 });
 
 
-
+// Create dynamic route with params /:
 app.get("/:customListName", function(req, res) {
   const customListName = _.capitalize(req.params.customListName);
   List.findOne({
@@ -88,6 +102,7 @@ app.get("/:customListName", function(req, res) {
 
 
 
+// Create root route for POST requests hit to /
 app.post("/", function(req, res) {
   const itemName = req.body.newItem;
   const listName = req.body.list;
@@ -109,7 +124,7 @@ app.post("/", function(req, res) {
 });
 
 
-
+// Create /delete route to remove exist items
 app.post("/delete", function(req, res) {
   const checkedItemId = req.body.theCheckbox;
   const listName = req.body.listName;
@@ -139,6 +154,8 @@ app.post("/delete", function(req, res) {
     })
   }
 });
+
+
 
 let port = process.env.PORT;
 if (port == null || port == "") {
