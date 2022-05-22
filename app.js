@@ -140,7 +140,11 @@ app.post("/delete", function(req, res) {
   }
 });
 
+let port = process.env.PORT;
+if (port == null || port == "") {
+  port = 8000;
+}
 
-app.listen(3000, function() {
-  console.log("The server is running on MongoDB Atlas!");
+app.listen(port, function() {
+  console.log("The server is running on MongoDB Atlas or local port 3000!");
 });
